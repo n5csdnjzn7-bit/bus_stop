@@ -117,7 +117,7 @@
             if (wData.temperature?.data?.length > 0) temp = wData.temperature.data[0].value;
             document.getElementById('weather-text').innerText = ${temp}°C | 天文台;
             
-            const warnRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc');
+            const warnRes = await fetch('https://cors-anywhere.herokuapp.com/https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc');
             const warnData = await warnRes.json();
             const wBox = document.getElementById('warning-box');
             const wList = document.getElementById('warning-list');
@@ -141,7 +141,7 @@
             try {
                 if (route.company === 'kmb') {
                     if (!kmbCache[route.stop_id]) {
-                        const res = await fetch(https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${route.stop_id});
+                        const res = await fetch('https://cors-anywhere.herokuapp.com/https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${route.stop_id}');
                         const json = await res.json();
                         kmbCache[route.stop_id] = json.data || [];
                     }
@@ -149,7 +149,7 @@
                     times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
                 } else if (route.company === 'ctb') {
                     // 🌟 修正：恢復為政府官方的 citybus-nwfb 完整 API 路徑
-                    const res = await fetch(https://rt.data.gov.hk/v1/transport/citybus-nwfb/eta/CTB/${route.stop_id}/${route.no});
+                    const res = await fetch('https://cors-anywhere.herokuapp.com/https://rt.data.gov.hk/v1/transport/citybus-nwfb/eta/CTB/${route.stop_id}/${route.no}');
                     const json = await res.json();
                     const matches = json.data || [];
                     times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
@@ -182,8 +182,8 @@
     }
 
     fetchWeather(); updateBusDashboard();
-    setInterval(fetchWeather, 300000);
-    setInterval(updateBusDashboard, 30000);
+    setInterval(fetchWeather, 3000);
+    setInterval(updateBusDashboard, 3000);
 </script>
 
 </body>
