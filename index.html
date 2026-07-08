@@ -69,7 +69,7 @@
 <script>
     const CONFIG = {
         routes: [
-            { no: '57M', company: 'kmb', stop_id: 'A209000A150D328E', station: '業旺邨', dest: '荔景北' },
+            { no: '57M', company: 'kmb', stop_id: '76E1845DB572DD12', station: '業旺邨', dest: '荔景北' },
             { no: '59M', company: 'kmb', stop_id: 'A213500B6780072C', station: '龍逸邨', dest: '屯門碼頭' },
             { no: '59X', company: 'kmb', stop_id: 'A213500B6780072C', station: '龍逸邨', dest: '屯門碼頭' },
             { no: '960', company: 'kmb', stop_id: 'A230000FF9D8BF4B', station: '轉車站', dest: '會展站' },
@@ -111,7 +111,7 @@
 
     async function fetchWeather() {
         try {
-            const wRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rwrv&lang=tc');
+            const wRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc');
             const wData = await wRes.json();
             let temp = '--';
             if (wData.temperature?.data?.length > 0) temp = wData.temperature.data[0].value;
