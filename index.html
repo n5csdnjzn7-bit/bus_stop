@@ -104,7 +104,7 @@
         const now = new Date();
         const options = { month: '2-digit', day: '2-digit' };
         const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        document.getElementById('live-date').innerText = ${now.toLocaleDateString('zh-HK', options)} ${weekDays[now.getDay()]};
+        document.getElementById('live-date').innerText = ${now.toLocaleDateString('zh-HK', options)}+${weekDays[now.getDay()]};
         document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0].substring(0, 5);
     }
     setInterval(updateClock, 1000); updateClock();
