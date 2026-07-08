@@ -1,308 +1,190 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-HK">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>香港實時巴士到站顯示牌</title>
+    <title>屯門專線 - 玩具總動員主題顯示屏</title>
     <style>
-        :root {
-            --led-orange: #ff9900;
-            --led-dim: #331f00;
-            --bg-black: #111111;
-            --panel-bg: #222222;
-        }
-
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--bg-black);
-            color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: #5cc0f4;
+            background-image: 
+                radial-gradient(circle at 20% 30%, #ffffff 0%, #ffffff 4%, transparent 5%),
+                radial-gradient(circle at 25% 28%, #ffffff 0%, #ffffff 6%, transparent 7%),
+                radial-gradient(circle at 30% 32%, #ffffff 0%, #ffffff 5%, transparent 6%),
+                radial-gradient(circle at 70% 60%, #ffffff 0%, #ffffff 5%, transparent 6%),
+                radial-gradient(circle at 75% 58%, #ffffff 0%, #ffffff 7%, transparent 8%),
+                radial-gradient(circle at 80% 62%, #ffffff 0%, #ffffff 4%, transparent 5%);
+            background-size: 400px 400px;
+            font-family: "Arial Rounded MT Bold", "Chalkboard SE", "Comic Sans MS", "Mplus Rounded 1c", "微軟正黑體", sans-serif;
+            margin: 0; padding: 10px; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
-
-        h1 {
-            color: #ffffff;
-            margin-bottom: 10px;
-            font-weight: 400;
+        .container {
+            display: flex; width: 100%; max-width: 1024px; height: 100%; max-height: 600px;
+            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border-radius: 24px; border: 6px solid #ffffff; padding: 18px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
         }
-
-        /* 控制列 */
-        .controls {
-            margin-bottom: 20px;
-            background: var(--panel-bg);
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        select, button {
-            padding: 10px 15px;
-            font-size: 16px;
-            border-radius: 4px;
-            border: 1px solid #444;
-            background: #333;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #444;
-        }
-
-        .status-text {
-            font-size: 14px;
-            color: #aaa;
-        }
-
-        /* LED 顯示牌面板 */
-        .led-panel {
-            background-color: #050505;
-            border: 4px solid #444;
-            border-radius: 6px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            padding: 10px 0;
-        }
-
-        /* 標題欄 */
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 15px;
-            border-bottom: 2px dashed #333;
-            color: #888;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        /* 每一行巴士班次 */
-        .eta-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            border-bottom: 1px solid #1a1a1a;
-            font-family: monospace;
-        }
-
-        .eta-row:last-child {
-            border-bottom: none;
-        }
-
-        /* LED 文字顏色 */
-        .bus-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .route-badge {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-            background: #cc0000; /* 預設九巴紅 */
-            padding: 2px 8px;
-            border-radius: 4px;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .route-badge.ctb {
-            background: #003399; /* 城巴藍 */
-        }
-
-        .destination {
-            font-size: 20px;
-            color: var(--led-orange);
-            text-shadow: 0 0 5px rgba(255, 153, 0, 0.5);
-        }
-
-        .time-info {
-            text-align: right;
-        }
-
-        .countdown {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--led-orange);
-            text-shadow: 0 0 5px rgba(255, 153, 0, 0.5);
-        }
-
-        .exact-time {
-            font-size: 12px;
-            color: #666;
-            margin-top: 2px;
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 30px;
-            color: #555;
-            font-size: 18px;
-        }
+        .left-panel { width: 60%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-right: 15px; border-right: 3px dashed rgba(255, 255, 255, 0.5); }
+        .bus-row { display: flex; align-items: center; background: rgba(255, 255, 255, 0.85); padding: 8px 15px; border-radius: 16px; height: 15%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+        .bus-badge { width: 80px; padding: 4px 0; text-align: center; font-size: 22px; font-weight: 900; border-radius: 12px; color: #fff; margin-right: 15px; box-shadow: 0 3px 0px rgba(0,0,0,0.2); }
+        .kmb-bg { background-color: #ff4757; }
+        .ctb-bg { background-color: #ffa502; color: #fff; }
+        .station-info { flex-grow: 1; font-size: 14px; color: #57606f; font-weight: bold; }
+        .station-info .dest { font-size: 17px; font-weight: 900; color: #2f3542; }
+        .eta-times { display: flex; gap: 12px; font-size: 20px; font-weight: 900; min-width: 160px; justify-content: flex-end; }
+        .time-next { color: #2ed573; font-size: 22px; }
+        .time-sub { color: #a4b0be; } 
+        .right-panel { width: 40%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-left: 15px; text-align: center; }
+        .date-box { font-size: 20px; color: #2f3542; font-weight: 900; margin-top: 10px; background: rgba(255,255,255,0.5); padding: 4px 12px; border-radius: 20px; }
+        .clock-box { font-size: 72px; font-weight: 900; color: #ffffff; line-height: 1; margin: 8px 0; text-shadow: 3px 3px 0px #2f3542; }
+        .weather-box { font-size: 18px; color: #ff6b81; font-weight: 900; background: rgba(255,255,255,0.7); padding: 4px 15px; border-radius: 20px; }
+        .warning-bar { background: #ff4757; border: 2px solid #ffffff; color: #ffffff; font-size: 13px; font-weight: bold; padding: 6px 10px; border-radius: 12px; width: 90%; display: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .reminder-box { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 0 10px; font-size: 24px; font-weight: 900; line-height: 1.6; color: #2f3542; text-shadow: 1px 1px 0px #ffffff; }
+        .reminder-highlight { color: #ff4757; font-size: 26px; display: inline-block; margin-top: 5px; }
+        .footer { font-size: 11px; color: #ffffff; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        #debug-log { font-size: 10px; color: #ff4757; background: rgba(211, 47, 47, 0.1); padding: 2px 6px; border-radius: 4px; max-width: 90%; word-break: break-all; display: none; }
     </style>
 </head>
 <body>
 
-    <h1>香港巴士實時到站顯示牌</h1>
-
-    <!-- 路線選擇控制 -->
-    <div class="controls">
-        <label for="route-select">選擇監測車站：</label>
-        <select id="route-select" onchange="changeRoute()">
-            <!-- 格式: 公司|路線|車站ID|方向|車站名稱 (城巴方向沒用到，但九巴要) -->
-            <option value="KMB|1A|N/A|inbound|尖沙咀碼頭總站 (九巴 1A)">尖沙咀碼頭總站 (九巴 1A 往中秀茂坪)</option>
-            <option value="KMB|968|N/A|outbound|元朗西總站 (九巴 968)">元朗西總站 (九巴 968 往銅鑼灣)</option>
-            <option value="CTB|102|002410|N/A|紅磡海底隧道收費廣場 (城巴 102)">紅隧收費廣場 (城巴 102 往美孚)</option>
-            <option value="CTB|E21A|002769|N/A|旺角警署 (城巴 E21A)">旺角警署 (城巴 E21A 往逸東邨)</option>
-        </select>
-        
-        <button onclick="refreshData()">手動刷新</button>
-        <span class="status-text" id="sync-status">正在初始化...</span>
+<div class="container">
+    <div class="left-panel" id="bus-board">
+        <p style="text-align:center; color:#ffffff; margin-top:50px; font-size:18px;">正在連接香港政府公共數據源...</p>
     </div>
-
-    <!-- LED 顯示面板 -->
-    <div class="led-panel">
-        <div class="panel-header">
-            <span id="panel-title">巴士站點</span>
-            <span>預計到站 (分鐘)</span>
+    <div class="right-panel">
+        <div>
+            <div class="date-box" id="live-date">00/00 Wednesday</div>
+            <div class="clock-box" id="live-clock">00:00</div>
+            <div class="weather-box" id="weather-text">--°C | 連線中</div>
         </div>
-        <div id="panel-content">
-            <!-- 這裡會由 JavaScript 動態插入 -->
+        <div class="warning-bar" id="warning-box">⚠️ 注意：<span id="warning-list"></span></div>
+        <div class="reminder-box">
+            <div>出門口之前記得攞齊野呀!!<br><span class="reminder-highlight">Have a very good day🩷</span></div>
         </div>
+        <div id="debug-log"></div>
+        <div class="footer" id="update-time">更新時間: --:--:--</div>
     </div>
+</div>
 
-    <script>
-        // 全域變數，用來管理計時器
-        let updateTimerId = null;
-        let countdownTimerId = null;
-        let currentNextRefresh = 30; // 每 30 秒刷新一次
+<script>
+    const CONFIG = {
+        routes: [
+            { no: '57M', company: 'kmb', stop_id: 'A209000A150D328E', station: '業旺邨', dest: '荔景北' },
+            { no: '59M', company: 'kmb', stop_id: 'A213500B6780072C', station: '龍逸邨', dest: '屯門碼頭' },
+            { no: '59X', company: 'kmb', stop_id: 'A213500B6780072C', station: '龍逸邨', dest: '屯門碼頭' },
+            { no: '960', company: 'kmb', stop_id: 'A230000FF9D8BF4B', station: '轉車站', dest: '會展站' },
+            { no: '961', company: 'kmb', stop_id: 'A230000FF9D8BF4B', station: '轉車站', dest: '灣仔會展' },
+            { no: '962G', company: 'ctb', stop_id: '003423', station: '龍逸邨', dest: '屯門湖景' }
+        ]
+    };
 
-        // 初始化載入
-        window.onload = function() {
-            refreshData();
-            // 設定自動刷新迴圈 (每 30 秒呼叫一次 API)
-            updateTimerId = setInterval(refreshData, 30000);
-            
-            // 每秒更新一次介面上的倒數文字
-            countdownTimerId = setInterval(updateCountdownText, 1000);
-        };
+    function showError(msg) {
+        const logBox = document.getElementById('debug-log');
+        logBox.style.display = 'block';
+        logBox.innerText = "除錯提示: " + msg;
+    }
 
-        // 當使用者切換下拉選單時
-        function changeRoute() {
-            refreshData();
-        }
-
-        // 核心：獲取 API 數據並渲染介面
-        async function refreshData() {
-            const selectElement = document.getElementById('route-select');
-            const [company, route, stopId, bound, stopName] = selectElement.value.split('|');
-            
-            document.getElementById('panel-title').innerText = stopName;
-            const contentDiv = document.getElementById('panel-content');
-            contentDiv.innerHTML = '<div class="no-data">數據更新中...</div>';
-            
-            // 重設倒數秒數
-            currentNextRefresh = 30;
-            updateStatusText();
-
-            let url = '';
-            // 根據不同巴士公司組合不同的 API URL
-            if (company === 'KMB') {
-                // 九巴直接查整條線最方便
-                url = `https://etabus.gov.hk{route}/${bound}`;
-            } else if (company === 'CTB') {
-                // 城巴必須指定車站、路線
-                url = `https://etabus.gov.hk{company}/${stopId}/${route}`;
+    function parseToMinutes(etaStr) {
+        if (!etaStr) return null;
+        try {
+            // 🛠️ 專為 iOS Safari 優化的時間格式解析器
+            let cleanStr = etaStr.replace(/-/g, '/').replace('T', ' ');
+            if (cleanStr.indexOf('+') > -1) {
+                cleanStr = cleanStr.substring(0, cleanStr.indexOf('+'));
             }
+            const diffMs = new Date(cleanStr).getTime() - new Date().getTime();
+            const mins = Math.max(0, Math.floor(diffMs / 1000 / 60));
+            return isNaN(mins) ? null : mins;
+        } catch (e) {
+            return null;
+        }
+    }
 
+    function updateClock() {
+        const now = new Date();
+        const options = { month: '2-digit', day: '2-digit' };
+        const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        document.getElementById('live-date').innerText = ${now.toLocaleDateString('zh-HK', options)} ${weekDays[now.getDay()]};
+        document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0].substring(0, 5);
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    async function fetchWeather() {
+        try {
+            const wRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rwrv&lang=tc');
+            const wData = await wRes.json();
+            let temp = '--';
+            if (wData.temperature?.data?.length > 0) temp = wData.temperature.data[0].value;
+            document.getElementById('weather-text').innerText = ${temp}°C | 天文台;
+            
+            const warnRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc');
+            const warnData = await warnRes.json();
+            const wBox = document.getElementById('warning-box');
+            const wList = document.getElementById('warning-list');
+
+            if (warnData && Object.keys(warnData).length > 0) {
+                wBox.style.display = 'block';
+                wList.innerText = Object.values(warnData).map(w => w.name).join(', ');
+            } else { wBox.style.display = 'none'; }
+        } catch (e) {
+            console.log("Weather error", e);
+        }
+    }
+
+    async function updateBusDashboard() {
+        const board = document.getElementById('bus-board');
+        let htmlContent = '';
+        const kmbCache = {};
+
+        for (const route of CONFIG.routes) {
+            let times = [];
             try {
-                const response = await fetch(url);
-                const result = await response.json();
-                let etaList = result.data || [];
-
-                // 如果是九巴，因為拿到了全線資料，我們需要篩選出「首個車站」或特定序列來示意
-                // 這裡簡單篩選前 3 筆非空數據
-                if (company === 'KMB') {
-                    etaList = etaList.filter(item => item.eta).slice(0, 3);
-                } else {
-                    // 城巴本身就只回傳該站的班次
-                    etaList = etaList.filter(item => item.eta);
+                if (route.company === 'kmb') {
+                    if (!kmbCache[route.stop_id]) {
+                        const res = await fetch(https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${route.stop_id});
+                        const json = await res.json();
+                        kmbCache[route.stop_id] = json.data || [];
+                    }
+                    const matches = kmbCache[route.stop_id].filter(item => item.route === route.no);
+                    times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
+                } else if (route.company === 'ctb') {
+                    // 🌟 修正：恢復為政府官方的 citybus-nwfb 完整 API 路徑
+                    const res = await fetch(https://rt.data.gov.hk/v1/transport/citybus-nwfb/eta/CTB/${route.stop_id}/${route.no});
+                    const json = await res.json();
+                    const matches = json.data || [];
+                    times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
                 }
-
-                renderHtml(etaList, company, route);
-
-            } catch (error) {
-                console.error('API 讀取失敗:', error);
-                contentDiv.innerHTML = '<div class="no-data">無法連線至政府開放數據平台</div>';
-            }
-        }
-
-        // 將數據轉化為 LED 面板 HTML
-        function renderHtml(etaList, company, route) {
-            const contentDiv = document.getElementById('panel-content');
-            
-            if (etaList.length === 0) {
-                contentDiv.innerHTML = '<div class="no-data">暫無班次資料 (可能已過尾班車)</div>';
-                return;
+            } catch (e) {
+                showError(${route.no} 讀取失敗: ${e.message || '網絡阻擋'});
             }
 
-            let html = '';
-            const now = new Date();
+            const t1 = times.length > 0 ? ${times[0]}m : 'N/A';
+            const t2 = times.length > 1 ? ${times[1]}m : 'N/A';
+            const t3 = times.length > 2 ? ${times[2]}m : 'N/A';
 
-            etaList.forEach(info => {
-                const etaTime = new Date(info.eta);
-                // 計算剩餘分鐘數
-                const diffMs = etaTime - now;
-                let diffMins = Math.ceil(diffMs / 1000 / 60);
-                
-                if (diffMins < 0) diffMins = 0; // 已經到站或過時顯示 0
-
-                // 處理顯示文字
-                let countdownStr = diffMins === 0 ? "即將到站" : `${diffMins} 分鐘`;
-                
-                // 處理目的地與備註文字
-                let dest = info.dest_tc || (company === 'KMB' ? '班次' : '未定');
-                let rmk = info.rmk_tc ? ` (${info.rmk_tc})` : '';
-
-                // 設定樣式類別
-                const badgeClass = company === 'CTB' ? 'route-badge ctb' : 'route-badge';
-
-                html += `
-                    <div class="eta-row">
-                        <div class="bus-info">
-                            <span class="${badgeClass}">${route}</span>
-                            <span class="destination">往 ${dest}${rmk}</span>
-                        </div>
-                        <div class="time-info">
-                            <span class="countdown">${countdownStr}</span>
-                            <div class="exact-time">定時: ${etaTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                        </div>
+            htmlContent += `
+                <div class="bus-row">
+                    <div class="bus-badge ${route.company}-bg">${route.no}</div>
+                    <div class="station-info">
+                        <div class="dest">往 ${route.dest}</div>
+                        <div>📍 ${route.station}</div>
                     </div>
-                `;
-            });
-
-            contentDiv.innerHTML = html;
+                    <div class="eta-times">
+                        <span class="time-next">${t1}</span>
+                        <span class="time-sub">${t2}</span>
+                        <span class="time-sub">${t3}</span>
+                    </div>
+                </div>
+            `;
         }
+        board.innerHTML = htmlContent;
+        document.getElementById('update-time').innerText = 更新時間: ${new Date().toLocaleTimeString()};
+    }
 
-        // 更新狀態列的倒數計時文字
-        function updateCountdownText() {
-            if (currentNextRefresh > 0) {
-                currentNextRefresh--;
-            }
-            updateStatusText();
-        }
+    fetchWeather(); updateBusDashboard();
+    setInterval(fetchWeather, 300000);
+    setInterval(updateBusDashboard, 30000);
+</script>
 
-        function updateStatusText() {
-            document.getElementById('sync-status').innerText = `將於 ${currentNextRefresh} 秒後自動更新`;
-        }
-    </script>
 </body>
 </html>
