@@ -104,7 +104,7 @@
         const now = new Date();
         const options = { month: '2-digit', day: '2-digit' };
         const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        /*document.getElementById('live-date').innerText = ${now.toLocaleDateString('zh-HK', options)}+${weekDays[now.getDay()]};*/
+        document.getElementById('live-date').innerText = '${now.toLocaleDateString('zh-HK', options)} ${weekDays[now.getDay()]};'
         document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0].substring(0, 5);
     }
     setInterval(updateClock, 1000); updateClock();
@@ -115,7 +115,7 @@
             const wData = await wRes.json();
             let temp = '--';
             if (wData.temperature?.data?.length > 0) temp = wData.temperature.data[0].value;
-            document.getElementById('weather-text').innerText = ${temp}°C | 天文台;
+            document.getElementById('weather-text').innerText = '${temp}°C | 天文台';
             
             const warnRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc');
             const warnData = await warnRes.json();
@@ -178,7 +178,7 @@
             `;
         }
         board.innerHTML = htmlContent;
-        document.getElementById('update-time').innerText = 更新時間: ${new Date().toLocaleTimeString()};
+        document.getElementById('update-time').innerText = '更新時間: ${new Date().toLocaleTimeString()};'
     }
 
     fetchWeather(); updateBusDashboard();
