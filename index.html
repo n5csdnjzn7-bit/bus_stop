@@ -2,17 +2,10 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>屯門專線 - 玩具總動員主題顯示屏</title>
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="屯門巴士屏">
-    
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluent/180/000000/toy-story.png">
-
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; }
         body {
             background-color: #5cc0f4;
             background-image: 
@@ -29,238 +22,168 @@
         .container {
             display: flex; width: 100%; max-width: 1024px; height: 100%; max-height: 600px;
             background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            border-radius: 24px; border: 6px solid #ffffff; padding: 15px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 24px; border: 6px solid #ffffff; padding: 18px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
         }
-        .left-panel { width: 56%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-right: 15px; border-right: 3px dashed rgba(255, 255, 255, 0.5); }
-        
-        /* 🌟 頂部標題列：拉寬右側區塊（min-width 加大到 220px），確保「即將到達」橫向一行完整顯示 */
-        .board-header { display: flex; align-items: center; padding: 0 15px; height: 6%; font-size: 16px; font-weight: 900; color: #2f3542; }
-        .header-main { flex-grow: 1; }
-        .header-slots { display: flex; min-width: 220px; justify-content: flex-end; text-align: right; }
-        .header-slot { width: 70px; margin-left: 5px; } 
-
-        .bus-row { display: flex; align-items: center; background: rgba(255, 255, 255, 0.85); padding: 8px 15px; border-radius: 16px; height: 14%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
-        
-        .bus-badge { width: 85px; padding: 6px 0; text-align: center; font-size: 24px; font-weight: 900; border-radius: 12px; color: #fff; margin-right: 12px; box-shadow: 0 3px 0px rgba(0,0,0,0.2); }
+        .left-panel { width: 60%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-right: 15px; border-right: 3px dashed rgba(255, 255, 255, 0.5); }
+        .bus-row { display: flex; align-items: center; background: rgba(255, 255, 255, 0.85); padding: 8px 15px; border-radius: 16px; height: 15%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+        .bus-badge { width: 80px; padding: 4px 0; text-align: center; font-size: 22px; font-weight: 900; border-radius: 12px; color: #fff; margin-right: 15px; box-shadow: 0 3px 0px rgba(0,0,0,0.2); }
         .kmb-bg { background-color: #ff4757; }
         .ctb-bg { background-color: #ffa502; color: #fff; }
-        
-        .station-info { flex-grow: 1; font-size: 14px; color: #57606f; font-weight: bold; overflow: hidden; }
-        .station-info .dest { font-size: 24px; font-weight: 900; color: #2f3542; margin-bottom: 1px; } 
-        
-        /* 🌟 下方倒數時間格：同步拉寬到 220px 進行完美對齊 */
-        .eta-times { display: flex; min-width: 220px; justify-content: flex-end; font-size: 22px; font-weight: 900; text-align: right; }
-        .time-box { width: 70px; margin-left: 5px; } 
-        .time-next { color: #2ed573; font-size: 25px; }
+        .station-info { flex-grow: 1; font-size: 14px; color: #57606f; font-weight: bold; }
+        .station-info .dest { font-size: 17px; font-weight: 900; color: #2f3542; }
+        .eta-times { display: flex; gap: 12px; font-size: 20px; font-weight: 900; min-width: 160px; justify-content: flex-end; }
+        .time-next { color: #2ed573; font-size: 22px; }
         .time-sub { color: #a4b0be; } 
-        
-        .no-service { font-size: 16px; color: #a4b0be; font-weight: 900; text-align: right; min-width: 220px; letter-spacing: 0.5px; }
-
-        .right-panel { width: 44%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-left: 15px; text-align: center; }
-        
-        .date-box { display: flex; flex-direction: column; gap: 4px; color: #2f3542; font-weight: 900; margin-top: 5px; background: rgba(255,255,255,0.5); padding: 8px 12px; border-radius: 20px; width: 95%; white-space: nowrap; }
-        .date-en { font-size: 22px; color: #2f3542; letter-spacing: 0.5px; }
-        .date-zh { font-size: 24px; color: #2f3542; }
-
-        .clock-container { display: flex; flex-direction: column; align-items: center; margin: 2px 0; }
-        .clock-box { font-size: 56px; font-weight: 900; color: #ffffff; line-height: 1; text-shadow: 3px 3px 0px #2f3542; display: flex; align-items: baseline; justify-content: center; }
-        .clock-ampm { font-size: 24px; margin-left: 6px; font-weight: 900; color: #ffffff; text-shadow: 2px 2px 0px #2f3542; }
-        .week-box { font-size: 16px; color: #ffffff; font-weight: 900; background: #2f3542; padding: 3px 10px; border-radius: 10px; margin-top: 4px; display: inline-block; }
-        
-        .weather-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,0.7); padding: 8px 12px; border-radius: 20px; width: 95%; }
-        .weather-temp { font-size: 28px; color: #2f3542; font-weight: 900; }
-        .weather-zh { font-size: 19px; color: #ff6b81; font-weight: 900; }
-        .weather-en { font-size: 19px; color: #ff6b81; font-weight: 900; }
-
+        .right-panel { width: 40%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding-left: 15px; text-align: center; }
+        .date-box { font-size: 20px; color: #2f3542; font-weight: 900; margin-top: 10px; background: rgba(255,255,255,0.5); padding: 4px 12px; border-radius: 20px; }
+        .clock-box { font-size: 72px; font-weight: 900; color: #ffffff; line-height: 1; margin: 8px 0; text-shadow: 3px 3px 0px #2f3542; }
+        .weather-box { font-size: 18px; color: #ff6b81; font-weight: 900; background: rgba(255,255,255,0.7); padding: 4px 15px; border-radius: 20px; }
         .warning-bar { background: #ff4757; border: 2px solid #ffffff; color: #ffffff; font-size: 13px; font-weight: bold; padding: 6px 10px; border-radius: 12px; width: 90%; display: none; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         .reminder-box { flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 0 10px; font-size: 24px; font-weight: 900; line-height: 1.6; color: #2f3542; text-shadow: 1px 1px 0px #ffffff; }
         .reminder-highlight { color: #ff4757; font-size: 26px; display: inline-block; margin-top: 5px; }
-        .footer { font-size: 11px; color: #ffffff; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); width: 100%; display: flex; justify-content: center; align-items: center; }
+        .footer { font-size: 11px; color: #ffffff; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        #debug-log { font-size: 10px; color: #ff4757; background: rgba(211, 47, 47, 0.1); padding: 2px 6px; border-radius: 4px; max-width: 90%; word-break: break-all; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="left-panel">
-        <div class="board-header">
-            <div class="header-main">🚌 路線及目的地</div>
-            <div class="header-slots">
-                <div class="header-slot">即將到達</div>
-                <div class="header-slot">下一班</div>
-                <div class="header-slot">第三班</div>
-            </div>
-        </div>
-        
-        <div id="bus-board" style="display: flex; flex-direction: column; justify-content: space-between; height: 92%;">
-            </div>
+    <div class="left-panel" id="bus-board">
+        <p style="text-align:center; color:#ffffff; margin-top:50px; font-size:18px;">正在連接香港政府公共數據源...</p>
     </div>
-    
     <div class="right-panel">
         <div>
-            <div class="date-box">
-                <div class="date-en" id="date-en">08 July 2026</div>
-                <div class="date-zh" id="date-zh">二零二六年七月八日</div>
-            </div>
-            
-            <div class="clock-container">
-                <div class="clock-box"><span id="live-time">12:00</span><span class="clock-ampm" id="live-ampm">AM</span></div>
-                <div class="week-box" id="live-week">Wednesday • 星期三</div>
-            </div>
-            
-            <div class="weather-box">
-                <div class="weather-temp" id="weather-temp">--°C</div>
-                <div class="weather-zh" id="weather-zh">--</div>
-                <div class="weather-en" id="weather-en">--</div>
-            </div>
+            <div class="date-box" id="live-date">00/00 Wednesday</div>
+            <div class="clock-box" id="live-clock">00:00</div>
+            <div class="weather-box" id="weather-text">--°C | 連線中</div>
         </div>
         <div class="warning-bar" id="warning-box">⚠️ 注意：<span id="warning-list"></span></div>
         <div class="reminder-box">
-            <div>出門口之前記得攞齊野呀!!<br><span class="reminder-highlight">Have a very good day❤️</span></div>
+            <div>出門口之前記得攞齊野呀!!<br><span class="reminder-highlight">Have a very good day🩷</span></div>
         </div>
-        <div class="footer">
-            <span id="update-time">更新時間: --:--:--</span>
-        </div>
+        <div id="debug-log"></div>
+        <div class="footer" id="update-time">更新時間: --:--:--</div>
     </div>
 </div>
 
 <script>
-    var CONFIG = {
+    const CONFIG = {
         routes: [
-            { no: '57M', company: 'kmb', station: '業旺邨', dest: '荔景北', base: [4, 16, 28] },
-            { no: '59M', company: 'kmb', station: '龍逸邨', dest: '屯門碼頭', base: [2, 10, 18] },
-            { no: '59X', company: 'kmb', station: '龍逸邨', dest: '屯門碼頭', base: [7, 15, 22] },
-            { no: '960', company: 'kmb', station: '轉車站', dest: '會展站', base: [1, 12, 24] },
-            { no: '961', company: 'kmb', station: '轉車站', dest: '灣仔會展', base: [9, 21, 33] },
-            { no: '962G', company: 'ctb', station: '龍逸邨', dest: '屯門湖景', base: [14, 35, 50], isSpecial: true }
+            { no: '57M', company: 'kmb', stop_id: 'A209000A150D328E', station: '業旺邨', dest: '荔景北' },
+            { no: '59M', company: 'kmb', stop_id: 'A213500B6780072C', station: '龍逸邨', dest: '屯門碼頭' },
+            { no: '59X', company: 'kmb', stop_id: 'A213500B6780072C', station: '龍逸邨', dest: '屯門碼頭' },
+            { no: '960', company: 'kmb', stop_id: 'A230000FF9D8BF4B', station: '轉車站', dest: '會展站' },
+            { no: '961', company: 'kmb', stop_id: 'A230000FF9D8BF4B', station: '轉車站', dest: '灣仔會展' },
+            { no: '962G', company: 'ctb', stop_id: '003423', station: '龍逸邨', dest: '屯門湖景' }
         ]
     };
 
-    function toChineseYear(year) {
-        var digits = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
-        var yearStr = year.toString();
-        var result = '';
-        for (var i = 0; i < yearStr.length; i++) {
-            result += digits[parseInt(yearStr[i])];
-        }
-        return result + '年';
+    function showError(msg) {
+        const logBox = document.getElementById('debug-log');
+        logBox.style.display = 'block';
+        logBox.innerText = "除錯提示: " + msg;
     }
 
-    function toChineseNum(num) {
-        var units = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
-        if (num <= 10) return units[num];
-        if (num < 20) return '十' + units[num % 10];
-        if (num % 10 === 0) return units[Math.floor(num / 10)] + '十';
-        return units[Math.floor(num / 10)] + '十' + units[num % 10];
-    }
-
-    function updateClockAndWeather() {
-        var now = new Date();
-        
-        var monthsEN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        var dayEN = now.getDate();
-        dayEN = dayEN < 10 ? '0' + dayEN : dayEN; 
-        document.getElementById('date-en').innerText = dayEN + ' ' + monthsEN[now.getMonth()] + ' ' + now.getFullYear();
-
-        var chineseYear = toChineseYear(now.getFullYear());
-        var chineseMonth = toChineseNum(now.getMonth() + 1) + '月';
-        var chineseDay = toChineseNum(now.getDate()) + '日';
-        document.getElementById('date-zh').innerText = chineseYear + chineseMonth + chineseDay;
-        
-        var weekDaysEN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        var weekDaysZH = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-        var currentDayNum = now.getDay();
-        document.getElementById('live-week').innerText = weekDaysEN[currentDayNum] + ' • ' + weekDaysZH[currentDayNum];
-        
-        var hours = now.getHours();
-        var minutes = now.getMinutes();
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        var displayHours = hours % 12;
-        displayHours = displayHours ? displayHours : 12; 
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        var hoursStr = displayHours < 10 ? '0' + displayHours : displayHours;
-
-        document.getElementById('live-time').innerText = hoursStr + ':' + minutes;
-        document.getElementById('live-ampm').innerText = ampm;
-
-        var temp = 26;
-        var statusZH = "天氣晴朗";
-        var statusEN = "Sunny ☀️";
-        
-        if (hours >= 7 && hours < 18) {
-            temp = 31;
-            statusZH = "炎熱有陽光";
-            statusEN = "Hot and Sunny ☀️";
-        } else if (hours >= 18 && hours < 23) {
-            temp = 27;
-            statusZH = "微風清涼";
-            statusEN = "Cool and Breezy 🍃";
-        } else {
-            temp = 24;
-            statusZH = "夜間平靜";
-            statusEN = "Clear and Calm 🌙";
-        }
-        
-        document.getElementById('weather-temp').innerText = temp + '°C';
-        document.getElementById('weather-zh').innerText = statusZH;
-        document.getElementById('weather-en').innerText = statusEN;
-    }
-
-    function updateBusDashboard() {
-        var board = document.getElementById('bus-board');
-        var htmlContent = '';
-        var now = new Date();
-        var currentSeconds = now.getSeconds();
-        var currentDay = now.getDay();  
-        var currentHour = now.getHours();
-        var currentMin = now.getMinutes();
-
-        var is962GOperating = false;
-        if (currentDay >= 1 && currentDay <= 5) { 
-            if (currentHour === 18 || (currentHour === 19 && currentMin <= 30)) {
-                is962GOperating = true;
+    function parseToMinutes(etaStr) {
+        if (!etaStr) return null;
+        try {
+            // 🛠️ 專為 iOS Safari 優化的時間格式解析器
+            let cleanStr = etaStr.replace(/-/g, '/').replace('T', ' ');
+            if (cleanStr.indexOf('+') > -1) {
+                cleanStr = cleanStr.substring(0, cleanStr.indexOf('+'));
             }
+            const diffMs = new Date(cleanStr).getTime() - new Date().getTime();
+            const mins = Math.max(0, Math.floor(diffMs / 1000 / 60));
+            return isNaN(mins) ? null : mins;
+        } catch (e) {
+            return null;
         }
+    }
 
-        for (var i = 0; i < CONFIG.routes.length; i++) {
-            var route = CONFIG.routes[i];
-            var etaHtml = '';
+    function updateClock() {
+        const now = new Date();
+        const options = { month: '2-digit', day: '2-digit' };
+        const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        document.getElementById('live-date').innerText = ${now.toLocaleDateString('zh-HK', options)} ${weekDays[now.getDay()]};
+        document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0].substring(0, 5);
+    }
+    setInterval(updateClock, 1000); updateClock();
 
-            if (route.isSpecial && !is962GOperating) {
-                etaHtml = '<div class="no-service">暫無服務 (No Service)</div>';
-            } else {
-                var offset = Math.floor(currentSeconds / 20) % 3; 
-                var t1 = (route.base[0] + offset) + 'm';
-                var t2 = (route.base[1] + offset) + 'm';
-                var t3 = (route.base[2] + offset) + 'm';
+    async function fetchWeather() {
+        try {
+            const wRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rwrv&lang=tc');
+            const wData = await wRes.json();
+            let temp = '--';
+            if (wData.temperature?.data?.length > 0) temp = wData.temperature.data[0].value;
+            document.getElementById('weather-text').innerText = ${temp}°C | 天文台;
+            
+            const warnRes = await fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc');
+            const warnData = await warnRes.json();
+            const wBox = document.getElementById('warning-box');
+            const wList = document.getElementById('warning-list');
 
-                etaHtml = '<div class="eta-times">' +
-                    '<span class="time-box time-next">' + t1 + '</span>' +
-                    '<span class="time-box time-sub">' + t2 + '</span>' +
-                    '<span class="time-box time-sub">' + t3 + '</span>' +
-                '</div>';
+            if (warnData && Object.keys(warnData).length > 0) {
+                wBox.style.display = 'block';
+                wList.innerText = Object.values(warnData).map(w => w.name).join(', ');
+            } else { wBox.style.display = 'none'; }
+        } catch (e) {
+            console.log("Weather error", e);
+        }
+    }
+
+    async function updateBusDashboard() {
+        const board = document.getElementById('bus-board');
+        let htmlContent = '';
+        const kmbCache = {};
+
+        for (const route of CONFIG.routes) {
+            let times = [];
+            try {
+                if (route.company === 'kmb') {
+                    if (!kmbCache[route.stop_id]) {
+                        const res = await fetch(https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${route.stop_id});
+                        const json = await res.json();
+                        kmbCache[route.stop_id] = json.data || [];
+                    }
+                    const matches = kmbCache[route.stop_id].filter(item => item.route === route.no);
+                    times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
+                } else if (route.company === 'ctb') {
+                    // 🌟 修正：恢復為政府官方的 citybus-nwfb 完整 API 路徑
+                    const res = await fetch(https://rt.data.gov.hk/v1/transport/citybus-nwfb/eta/CTB/${route.stop_id}/${route.no});
+                    const json = await res.json();
+                    const matches = json.data || [];
+                    times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
+                }
+            } catch (e) {
+                showError(${route.no} 讀取失敗: ${e.message || '網絡阻擋'});
             }
 
-            htmlContent += '<div class="bus-row">' +
-                '<div class="bus-badge ' + route.company + '-bg">' + route.no + '</div>' +
-                '<div class="station-info">' +
-                    '<div class="dest">往 ' + route.dest + '</div>' +
-                    '<div>📍 ' + route.station + '</div>' +
-                '</div>' +
-                etaHtml +
-            '</div>';
+            const t1 = times.length > 0 ? ${times[0]}m : 'N/A';
+            const t2 = times.length > 1 ? ${times[1]}m : 'N/A';
+            const t3 = times.length > 2 ? ${times[2]}m : 'N/A';
+
+            htmlContent += `
+                <div class="bus-row">
+                    <div class="bus-badge ${route.company}-bg">${route.no}</div>
+                    <div class="station-info">
+                        <div class="dest">往 ${route.dest}</div>
+                        <div>📍 ${route.station}</div>
+                    </div>
+                    <div class="eta-times">
+                        <span class="time-next">${t1}</span>
+                        <span class="time-sub">${t2}</span>
+                        <span class="time-sub">${t3}</span>
+                    </div>
+                </div>
+            `;
         }
         board.innerHTML = htmlContent;
-        
-        var sec = now.getSeconds();
-        sec = sec < 10 ? '0' + sec : sec;
-        document.getElementById('update-time').innerText = '更新時間: ' + document.getElementById('live-time').innerText + ':' + sec + ' ' + document.getElementById('live-ampm').innerText;
+        document.getElementById('update-time').innerText = 更新時間: ${new Date().toLocaleTimeString()};
     }
 
-    updateClockAndWeather();
-    updateBusDashboard();
-    
-    setInterval(updateClockAndWeather, 1000);
-    setInterval(updateBusDashboard, 5000);
+    fetchWeather(); updateBusDashboard();
+    setInterval(fetchWeather, 300000);
+    setInterval(updateBusDashboard, 30000);
 </script>
 
 </body>
