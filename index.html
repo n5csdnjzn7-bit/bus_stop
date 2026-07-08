@@ -141,7 +141,7 @@
             try {
                 if (route.company === 'kmb') {
                     if (!kmbCache[route.stop_id]) {
-                        const res = await fetch('https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${route.stop_id}');
+                        const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/${route.stop_id}`);
                         const json = await res.json();
                         kmbCache[route.stop_id] = json.data || [];
                     }
@@ -149,7 +149,7 @@
                     times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
                 } else if (route.company === 'ctb') {
                     // 🌟 修正：恢復為政府官方的 citybus-nwfb 完整 API 路徑
-                    const res = await fetch('https://rt.data.gov.hk/v1/transport/citybus-nwfb/eta/CTB/${route.stop_id}/${route.no}');
+                    const res = await fetch(`https://rt.data.gov.hk/v1/transport/citybus-nwfb/eta/CTB/${route.stop_id}/${route.no}`);
                     const json = await res.json();
                     const matches = json.data || [];
                     times = matches.map(item => parseToMinutes(item.eta)).filter(t => t !== null).sort((a,b) => a-b);
